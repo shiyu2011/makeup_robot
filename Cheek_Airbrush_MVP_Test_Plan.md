@@ -47,12 +47,12 @@
 - Compute area outside cheek mask above low-density threshold; report **overspray%**.
 
 ### 4.3 Safety latency
-- Induce motion spike (mechanical jig or subject cue); log frame timestamps & event publish time; verify **<100 ms** latency.  
-- Move fiducial near keep-out; verify **nozzle_near_keepout** triggers at < **25 mm**.
+- Induce motion spike (mechanical jig or subject cue); log frame timestamps and event publish time; verify **< 100 ms** latency.  
+- Move fiducial near keep-out boundary; verify **nozzle_near_keepout** triggers when distance < 25 mm.
 
 ## 5) Example test cases
 **TC-A1: σ(Z) calibration** — Pass if all Z have |σ_meas − σ_model|/σ_model ≤ **10%**.  
-**TC-B2: Retarget stability** — Pass if projected centers stay within **±1.5 mm** vs planned UV after transform.  
+**TC-B2: Retarget stability** — Pass if projected centers stay within **±1.5 mm** vs planned 3D after transform.  
 **TC-B3: Hair intrusion** — Pass if overspray ≤ **1%** and skip/re-queue logged.  
 **TC-C1: Human safety pause** — Pass if pause latency < **100 ms** and resume cleanly.
 
