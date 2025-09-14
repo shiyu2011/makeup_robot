@@ -78,41 +78,34 @@ Frames: vertices live in `{head}`; world pose given by `T_world←head(t)`.
 ---
 
 ## 5) Deposition model (calibrated offline)
-Gaussian plume (lateral spread) as a function of standoff:
-\[
-\sigma(Z) \approx a \cdot Z + b,\quad
-D(r) = \frac{k \cdot \text{flow}}{\text{speed}} \cos\theta \cdot \exp\Big(-\frac{r^2}{2\sigma(Z)^2}\Big)
-\]
+Gaussian plume (lateral spread) as a function of standoff:  
+
+$\sigma(Z) \approx a \cdot Z + b,\quad
+D(r) = \frac{k \cdot \text{flow}}{\text{speed}} \cos\theta \cdot \exp\Big(-\frac{r^2}{2\sigma(Z)^2}\Big)$  
 Where \(Z\)=standoff, \(\theta\)=angle to surface normal.
 
 ---
 
 ## 6) **Per-frame retargeting (real-time, no UV, no optimization)**
-For each **reference 3D point** \(p^{ref}\) on the mesh with base intensity \(I_{base}\):
+For each **reference 3D point** $\(p^{ref}\)$ on the mesh with base intensity $\(I_{base}\)$:
 
-1) **Transform to world** using the current ICP pose:  
-\[
-p_{world}(t) = R_{head}(t)\,p^{ref} + t_{head}(t)
-\]
-Likewise transform the stored surface normal \(n^{ref}\):  
-\[
-n_{world}(t) = R_{head}(t)\,n^{ref}
-\]
+1) **Transform to world** using the current ICP pose:    
 
-2) **Nozzle target (standoff \(d\))**:  
-\[
-p_{nozzle}(t) = p_{world}(t) + d \cdot n_{world}(t)
-\]
+$p_{world}(t) = R_{head}(t)\,p^{ref} + t_{head}(t)$  
 
-3) **Plume width** from current standoff (sample Z at \(p_{world}\) from depth if needed):  
-\[
-\sigma(Z(t)) = a \cdot Z(t) + b
-\]
+Likewise transform the stored surface normal $\(n^{ref}\):  
+$n_{world}(t) = R_{head}(t)\,n^{ref}&  
+
+2) **Nozzle target (standoff $\(d\)$)**:  
+$p_{nozzle}(t) = p_{world}(t) + d \cdot n_{world}(t)$
+
+3) **Plume width** from current standoff (sample Z at \(p_{world}\) from depth if needed):    
+$\sigma(Z(t)) = a \cdot Z(t) + b$
 
 4) **Intensity gating** (safety & quality):  
-- Compute **geodesic distance** on the mesh to hair/keep-out boundary: \(d_{\text{geo}}\).  
-- Gate: \(g = \mathrm{clip}(d_{\text{geo}} / \text{margin}_{mm}, 0, 1)\).  
-- Final intensity: \(I(t) = I_{base} \cdot g\).
+- Compute **geodesic distance** on the mesh to hair/keep-out boundary: $\(d_{\text{geo}}\)$.  
+- Gate: $\(g = \mathrm{clip}(d_{\text{geo}} / \text{margin}_{mm}, 0, 1)\)$.  
+- Final intensity: $\(I(t) = I_{base} \cdot g\)$.  
 
 5) **Emit `SprayFootprint`**  
 `{ center_world=p_world, normal_world=n_world, standoff_mm=d, sigma_mm=σ(Z), intensity_0_1=I(t) }`
